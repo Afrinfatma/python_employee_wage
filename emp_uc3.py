@@ -20,30 +20,41 @@ class Employee:
 
     def check_attendance(self, emp_check):
         """
-        This function is work for calculation employees wage
-        :return:
-        """
+                This function is work for employees attendance
+                is there take attendance using random
+                :return: nothing
+                """
+
         try:
-            if emp_check == 0:
-                daily_work_hour = 8
-                # print(" Employee is present ")
-            elif emp_check == 1:
-                daily_work_hour = 4
-                # print(" Employee is present for part-time ")
-            else:
-                daily_work_hour = 0
-                # print(" Employee is absent ")
-            return daily_work_hour
+            # if emp_check == 0:
+            #     daily_work_hour = 8
+            #     # print(" Employee is present ")
+            # elif emp_check == 1:
+            #     daily_work_hour = 4
+            #     # print(" Employee is present for part-time ")
+            # else:
+            #     daily_work_hour = 0
+            #     # print(" Employee is absent ")
+            # return daily_work_hour
+            full_time_hrs = 8
+            part_time_hrs = 4
+            absent_hrs = 0
+            employee_attendance = {
+                0: absent_hrs,
+                1: full_time_hrs,
+                2: part_time_hrs
+            }
+            return employee_attendance.get(emp_check)
         except Exception as e:
             print(e)
-            logging.exception("There is something occurs please re-check the code")
+            logging.exception("something went wrong")
 
     def calculating_wage(self):
         """
-        This function is work for employees attendance
-        is there take attendance using random
-        :return: nothing
-        """
+                This function is work for calculation employees wage
+                :return:
+                """
+
         logging.debug("Employee wage program is running perfectly.....")
         try:
             total_wage = 0
@@ -65,7 +76,7 @@ class Employee:
             return total_wage
 
         except Exception as e:
-            print("There is something occurs please re-check the code")
+            print("something went wrong , please re-check the code")
             logging.exception(e)
 
     def as_dict(self):
@@ -83,16 +94,16 @@ class Company:
 
     def get_employee(self, employee_name):
         emp_obj = self.employee_dict.get(employee_name)
-        print(emp_obj.as_dict())
+        return emp_obj
 
     def delete_employee(self, emp_name):
         self.employee_dict.pop(emp_name)
 
     def employee_details_view(self):
-        for i in self.employee_dict:
+        for emp_obj in self.employee_dict.values():
             # print(i)
             # print(self.employee_dict.get(i))
-            emp_obj = self.employee_dict.get(i)
+            # emp_obj = self.employee_dict.get(i)
             print(emp_obj.as_dict())
 
 
@@ -104,14 +115,16 @@ def add_company():
 
 
 def display_company():
-    print(comp_dict)
+    for index,company_name in enumerate(comp_dict.keys(),1):
+        print(index,company_name)
+
 
 
 def add_employee():
-    c_name = input("Enter company name : ")
-    comp_e = comp_dict.get(c_name)
+    comp_name = input("Enter company name : ")
+    comp_e = comp_dict.get(comp_name)
     if comp_e is None:
-        comp_e = Company(c_name)
+        comp_e = Company(comp_name)
         comp_dict.update({comp_e.name: comp_e})
     name = input("Enter employee name : ")
     emp = Employee(name, 30, 20, 120)
@@ -135,11 +148,15 @@ def delete_employee():
         print("Company doesn't exit ")
         return
     emp_name = input("Enter employee name : ")
-    comp_e.delete_employee(emp_name)
+    emp=comp_e.get_employee(emp_name)
+    if emp:
+        comp_e.delete_employee(emp_name)
+    else:
+        print("Nothing to delete")
 
 
 def display_employees():
-    print("<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
     company_name = input("Enter company name : ")
     comp_obj = comp_dict.get(company_name)
     if comp_obj is None:
@@ -155,7 +172,7 @@ if __name__ == "__main__":
         while True:
             print("1.add_company\n2.Display Company\n3.Add Employee \n4.Get Employee\n5.Delete "
                   "Employee\n6.display_employees\n0.Exit")
-            dict_e = {1: add_company,
+            dict_emp = {1: add_company,
                       2: display_company,
                       3: add_employee,
                       4: get_employee,
@@ -165,7 +182,7 @@ if __name__ == "__main__":
             r = int(input("Enter a number : "))
             if r == 0:
                 break
-            dict_e.get(r)()
+            dict_emp.get(r)()
             input("Press enter to continue ")
             print("--------------------- Choose Option ----------------------")
 
